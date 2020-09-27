@@ -6,7 +6,13 @@
       <button @click="increment" class="button next">次の月</button>
     </div>
     <div class="calendar-body">
-      <div v-for="data in createCalendar" :key="data.id" :data-id="data.id" :class="data.class">
+      <div
+        v-for="data in createCalendar"
+        :key="data.id"
+        :data-id="data.id"
+        :data-week="data.weekNumber"
+        :class="data.class"
+      >
         <div v-if="data.week" class="week">{{data.week}}</div>
         {{data.date}}
       </div>
@@ -45,13 +51,15 @@ export default {
       const nextLastDay = moment().add(this.current, "month").endOf("month").format("D");
       // console.log(this.lastDay) // 30
       // console.log(this.startDay) // 3 = 水曜
+      console.log(startDay)
 
       // 今月の日付を配列に格納
       for(let i = 1; i <= nextLastDay; i++) {
         calendarData.push({
           id: `${currentYear}-${currentMonth}-${i}`,
           date: i,
-          class: 'current-month'
+          class: 'current-month',
+          weekNumber: moment().add(this.current, "month").date(i).day()
         });
       }
 
@@ -75,11 +83,11 @@ export default {
       }
 
       // calendarData配列の【0~6】までの中に【日~土】をpushする
-      console.log(calendarData)
       for(let i = 0; i < 7; i++) {
         calendarData[i].week = this.week[i];
         // calendarData[i].dataset.week = this.week[i];
       }
+      console.log(calendarData)
       return calendarData;
     },
   },
@@ -170,5 +178,13 @@ export default {
       }
     }
   }
+}
+div[data-week="0"] {
+  background: #FFD1D1;
+  color: #990000;
+}
+div[data-week="6"] {
+  background: #CCF9FF;
+  color: #0000FF;
 }
 </style>
