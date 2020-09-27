@@ -6,7 +6,8 @@
       <button @click="increment" class="button next">次の月</button>
     </div>
     <div class="calendar-body">
-      <div v-for="data in sample" :key="data.id" :data-id="data.id" :class="data.class">
+      <div v-for="data in createCalendar" :key="data.id" :data-id="data.id" :class="data.class">
+        <div v-if="data.week" class="week">{{data.week}}</div>
         {{data.date}}
       </div>
     </div>
@@ -25,6 +26,7 @@ export default {
   data () {
     return {
       current: 0,
+      week: ['日', '月', '火', '水', '木', '金', '土']
     }
   },
   computed: {
@@ -34,15 +36,13 @@ export default {
     yearMonth() {
       return this.currentMoment.format('YYYY年M月');
     },
-    sample() {
+    createCalendar() {
       const calendarData = [];
       const startDay = moment().add(this.current, "month").startOf("months").format("d");
       const currentYear = moment().format("Y");
       const currentMonth = moment().add(this.current, "month").format("M");
       const prevLastDay = moment().subtract(this.current - 1, "month").endOf("month").format("D");
       const nextLastDay = moment().add(this.current, "month").endOf("month").format("D");
-      // this.prevMonth = moment().subtract(this.current - 1, "month").endOf("month").format("D");
-      console.log(this.current)
       // console.log(this.lastDay) // 30
       // console.log(this.startDay) // 3 = 水曜
 
@@ -73,12 +73,15 @@ export default {
           class: 'other-month'
         });
       }
+
+      // calendarData配列の【0~6】までの中に【日~土】をpushする
+      console.log(calendarData)
+      for(let i = 0; i < 7; i++) {
+        calendarData[i].week = this.week[i];
+        // calendarData[i].dataset.week = this.week[i];
+      }
       return calendarData;
     },
-  },
-  created() {
-
-
   },
   methods: {
     increment() {
@@ -151,7 +154,21 @@ export default {
     background: #fff;
   }
   .other-month {
-    background: #eee;
+    background: #f4f3f3;
+  }
+}
+.calendar-body {
+  > div {
+    &:nth-child(1) {
+      .week {
+        color: #990000;
+      }
+    }
+    &:nth-child(7) {
+      .week {
+        color: #0000FF;
+      }
+    }
   }
 }
 </style>
