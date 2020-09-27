@@ -11,10 +11,11 @@
         :key="data.id"
         :data-id="data.id"
         :data-week="data.weekNumber"
+        :data-today="data.id == today"
         :class="data.class"
       >
         <div v-if="data.week" class="week">{{data.week}}</div>
-        {{data.date}}
+        <div>{{data.date}}</div>
       </div>
     </div>
   </div>
@@ -32,7 +33,8 @@ export default {
   data () {
     return {
       current: 0,
-      week: ['日', '月', '火', '水', '木', '金', '土']
+      week: ['日', '月', '火', '水', '木', '金', '土'],
+      today: moment().format('YYYY-M-D')
     }
   },
   computed: {
@@ -157,6 +159,7 @@ export default {
   }
 }
 .calendar-body {
+  overflow: hidden;
   > div {
     &:nth-child(1) {
       .week {
@@ -177,5 +180,8 @@ div[data-week="0"] {
 div[data-week="6"] {
   background: #CCF9FF;
   color: #0000FF;
+}
+div[data-today] {
+  background: rgb(255, 255, 107);
 }
 </style>
