@@ -2,7 +2,7 @@
   <div id="app">
     <div class="calendar-header">
       <button @click="decrement" class="button prev">前の月</button>
-      {{yearMonth}}
+      {{yearAndMonth}}
       <button @click="increment" class="button next">次の月</button>
     </div>
     <div class="calendar-body">
@@ -36,22 +36,16 @@ export default {
     }
   },
   computed: {
-    currentMoment() {
-      return moment().add(this.current, 'months');
-    },
-    yearMonth() {
-      return this.currentMoment.format('YYYY年M月');
+    yearAndMonth() {
+      return moment().add(this.current, 'months').format('YYYY年M月');
     },
     createCalendar() {
       const calendarData = [];
       const startDay = moment().add(this.current, "month").startOf("months").format("d");
-      const currentYear = moment().format("Y");
+      const currentYear = moment().add(this.current, "month").format("Y");
       const currentMonth = moment().add(this.current, "month").format("M");
       const prevLastDay = moment().subtract(this.current - 1, "month").endOf("month").format("D");
       const nextLastDay = moment().add(this.current, "month").endOf("month").format("D");
-      // console.log(this.lastDay) // 30
-      // console.log(this.startDay) // 3 = 水曜
-      console.log(startDay)
 
       // 今月の日付を配列に格納
       for(let i = 1; i <= nextLastDay; i++) {
@@ -85,7 +79,6 @@ export default {
       // calendarData配列の【0~6】までの中に【日~土】をpushする
       for(let i = 0; i < 7; i++) {
         calendarData[i].week = this.week[i];
-        // calendarData[i].dataset.week = this.week[i];
       }
       console.log(calendarData)
       return calendarData;
@@ -94,11 +87,9 @@ export default {
   methods: {
     increment() {
       this.current ++;
-      // console.log(this.currentMonth)
     },
     decrement() {
       this.current --;
-      // console.log(this.currentMonth)
     }
   }
 }
