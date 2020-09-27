@@ -2,11 +2,11 @@
   <div id="app">
     <div class="calendar-header">
       <button @click="decrement" class="button prev">前の月</button>
-      {{currentYear}}年{{currentMonth}}月
+      {{yearMonth}}
       <button @click="increment" class="button next">次の月</button>
     </div>
     <div class="calendar-body">
-      <div v-for="data in calendarData" :key="data.id" :data-id="data.id" :class="data.class">
+      <div v-for="data in sample" :key="data.id" :data-id="data.id" :class="data.class">
         {{data.date}}
       </div>
     </div>
@@ -25,64 +25,69 @@ export default {
   data () {
     return {
       current: 0,
-      calendarData: [],
-      startDay: null,
-      currentYear: null,
-      currentMonth: null,
-      lastDay: null,
-      prevMonth: null,
     }
   },
+  computed: {
+    currentMoment() {
+      return moment().add(this.current, 'months');
+    },
+    yearMonth() {
+      return this.currentMoment.format('YYYY年M月');
+    },
+    sample() {
+      const calendarData = [];
+      const startDay = moment().add(this.current, "month").startOf("months").format("d");
+      const currentYear = moment().format("Y");
+      const currentMonth = moment().add(this.current, "month").format("M");
+      const prevLastDay = moment().subtract(this.current - 1, "month").endOf("month").format("D");
+      const nextLastDay = moment().add(this.current, "month").endOf("month").format("D");
+      // this.prevMonth = moment().subtract(this.current - 1, "month").endOf("month").format("D");
+      console.log(this.current)
+      // console.log(this.lastDay) // 30
+      // console.log(this.startDay) // 3 = 水曜
+
+      // 今月の日付を配列に格納
+      for(let i = 1; i <= nextLastDay; i++) {
+        calendarData.push({
+          id: `${currentYear}-${currentMonth}-${i}`,
+          date: i,
+          class: 'current-month'
+        });
+      }
+
+      // 前月の最終日から、startDay（7月 = 3（水曜））までを配列に格納
+      for(let i = 0; i < startDay; i++) {
+        calendarData.unshift({
+          id: `${currentYear}-${Number(currentMonth) - 1}-${prevLastDay - i}`,
+          date: prevLastDay - i,
+          class: 'other-month'
+        });
+      }
+
+      // 6*7の升目状の空いている箇所に、次月の日付を配列に追加
+      const addNextMonth = 42 - calendarData.length;
+      for(let i = 1; i <= addNextMonth; i++) {
+        calendarData.push({
+          id: `${currentYear}-${Number(currentMonth) + 1}-${i}`,
+          date: i,
+          class: 'other-month'
+        });
+      }
+      return calendarData;
+    },
+  },
   created() {
-    const self = this;
-    this.startDay = moment().startOf("months").format("d");
-    this.currentYear = moment().format("Y");
-    this.currentMonth = moment().add(this.current, "month").format("M");
-    this.prevLastDay = moment().subtract(this.current - 1, "month").endOf("month").format("D");
-    this.nextLastDay = moment().add(this.current, "month").endOf("month").format("D");
-    // this.prevMonth = moment().subtract(this.current - 1, "month").endOf("month").format("D");
-    console.log(this.current)
-    // console.log(this.lastDay) // 30
-    // console.log(this.startDay) // 3 = 水曜
-
-    // 今月の日付を配列に格納
-    for(let i = 1; i <= this.nextLastDay; i++) {
-      self.calendarData.push({
-        id: `${this.currentYear}-${this.currentMonth}-${i}`,
-        date: i,
-        class: 'current-month'
-      });
-    }
-
-    // 前月の最終日から、startDay（7月 = 3（水曜））までを配列に格納
-    for(let i = 0; i < this.startDay; i++) {
-      self.calendarData.unshift({
-        id: `${this.currentYear}-${Number(this.currentMonth) - 1}-${this.prevLastDay - i}`,
-        date: this.prevLastDay - i,
-        class: 'other-month'
-      });
-    }
-
-    // 6*7の升目状の空いている箇所に、次月の日付を配列に追加
-    const addNextMonth = 42 - this.calendarData.length;
-    for(let i = 1; i <= addNextMonth; i++) {
-      self.calendarData.push({
-        id: `${this.currentYear}-${Number(this.currentMonth) + 1}-${i}`,
-        date: i,
-        class: 'other-month'
-      });
-    }
 
 
   },
   methods: {
     increment() {
       this.current ++;
-      console.log(this.currentMonth)
+      // console.log(this.currentMonth)
     },
     decrement() {
       this.current --;
-      console.log(this.currentMonth)
+      // console.log(this.currentMonth)
     }
   }
 }
