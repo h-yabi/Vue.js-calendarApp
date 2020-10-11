@@ -12,10 +12,18 @@
         :data-id="data.id"
         :data-week="data.weekNumber"
         :data-today="data.id == today"
+        :data-holiday="Object.keys(publicHoliday).indexOf(data.id) != -1 || data.id.slice(-5) === '01-01' && true"
         :class="data.class"
       >
         <div v-if="data.week" class="week">{{data.week}}</div>
-        <div>{{data.date}}</div>
+        <div class="date-wrap">
+          <div class="date">{{data.date}}</div>
+          <div v-if="Object.keys(publicHoliday).indexOf(data.id) != -1" class="publicHoliday-text">
+            {{publicHoliday[data.id]}}
+          </div>
+          <div v-else-if="data.id.slice(-5) === '01-01'" class="publicHoliday-text">元日</div>
+
+        </div>
       </div>
     </div>
   </div>
@@ -24,6 +32,7 @@
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
 import moment from 'moment';
+import axios from 'axios';
 
 export default {
   name: 'App',
@@ -34,8 +43,11 @@ export default {
     return {
       current: 0,
       week: ['日', '月', '火', '水', '木', '金', '土'],
+      publicHoliday: '',
       today: moment().format('YYYY-M-D')
     }
+  },
+  created() {
   },
   computed: {
     yearAndMonth() {
@@ -49,10 +61,12 @@ export default {
       const prevLastDay = moment().subtract(this.current - 1, "month").endOf("month").format("D");
       const nextLastDay = moment().add(this.current, "month").endOf("month").format("D");
 
+      this.getpublicHoliday(currentYear);
+
       // 今月の日付を配列に格納
       for(let i = 1; i <= nextLastDay; i++) {
         calendarData.push({
-          id: `${currentYear}-${currentMonth}-${i}`,
+          id: `${currentYear}-${("0" + currentMonth).slice(-2)}-${("0" + i).slice(-2)}`,
           date: i,
           class: 'current-month',
           weekNumber: moment().add(this.current, "month").date(i).day()
@@ -61,8 +75,11 @@ export default {
 
       // 前月の最終日から、startDay（7月 = 3（水曜））までを配列に格納
       for(let i = 0; i < startDay; i++) {
+        const year = currentMonth > 1 ? currentYear : currentYear - 1;
+        const month = currentMonth > 1 ? ("0" + (Number(currentMonth) - 1)).slice(-2) : 12;
+
         calendarData.unshift({
-          id: `${currentYear}-${Number(currentMonth) - 1}-${prevLastDay - i}`,
+          id: `${year}-${month}-${("0" + (prevLastDay - i)).slice(-2)}`,
           date: prevLastDay - i,
           class: 'other-month'
         });
@@ -71,8 +88,11 @@ export default {
       // 6*7の升目状の空いている箇所に、次月の日付を配列に追加
       const addNextMonth = 42 - calendarData.length;
       for(let i = 1; i <= addNextMonth; i++) {
+        const year = currentMonth == 12 ? Number(currentYear) + 1 : currentYear;
+        const month = currentMonth == 12 ? '01' : ("0" + (Number(currentMonth) + 1)).slice(-2);
+
         calendarData.push({
-          id: `${currentYear}-${Number(currentMonth) + 1}-${i}`,
+          id: `${year}-${month}-${("0" + i).slice(-2)}`,
           date: i,
           class: 'other-month'
         });
@@ -82,11 +102,22 @@ export default {
       for(let i = 0; i < 7; i++) {
         calendarData[i].week = this.week[i];
       }
-      console.log(calendarData)
+      // console.log(calendarData[0])
       return calendarData;
     },
   },
   methods: {
+    getpublicHoliday(currentYear) {
+      axios
+        .get(`https://holidays-jp.github.io/api/v1/${currentYear}/date.json`)
+        .then(respose => {
+          this.publicHoliday = respose.data;
+          // console.log(this.publicHoliday);
+        })
+        .catch(e => {
+          alert(e);
+        });
+    },
     increment() {
       this.current ++;
     },
@@ -161,6 +192,10 @@ export default {
 .calendar-body {
   overflow: hidden;
   > div {
+    position: relative;
+    min-height: 100px;
+    padding: 5px 10px;
+    font-size: 14px;
     &:nth-child(1) {
       .week {
         color: #990000;
@@ -171,6 +206,9 @@ export default {
         color: #0000FF;
       }
     }
+  }
+  .date {
+    font-size: 16px;
   }
 }
 div[data-week="0"] {
@@ -183,5 +221,33 @@ div[data-week="6"] {
 }
 div[data-today] {
   background: rgb(255, 255, 107);
+}
+div[data-holiday] {
+  &.current-month {
+    background: #FFD1D1;
+    > * {
+      color: #990000;
+    }
+    .date {
+      background: #ffa67f;
+    }
+  }
+}
+.date-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+.publicHoliday-text {
+  color: #990000;
+  font-size: 12px;
 }
 </style>
