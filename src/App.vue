@@ -14,6 +14,7 @@
         :data-today="data.id == today"
         :data-holiday="Object.keys(publicHoliday).indexOf(data.id) != -1 || data.id.slice(-5) === '01-01' && true"
         :class="data.class"
+        @click="modalShow(data.id)"
       >
         <div v-if="data.week" class="week">{{data.week}}</div>
         <div class="date-wrap">
@@ -22,29 +23,37 @@
             {{publicHoliday[data.id]}}
           </div>
           <div v-else-if="data.id.slice(-5) === '01-01'" class="publicHoliday-text">元日</div>
-
         </div>
       </div>
     </div>
+
+    <transition name="fade">
+      <div v-show="modalState">
+        <Modal :modal-state="modalState" @modal-close="modalClose" ref="modal"></Modal>
+      </div>
+    </transition>
+
   </div>
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
+import Modal from './components/Modal.vue'
 import moment from 'moment';
 import axios from 'axios';
 
+
 export default {
   name: 'App',
-  // components: {
-  //   HelloWorld
-  // }
+  components: {
+    Modal
+  },
   data () {
     return {
       current: 0,
       week: ['日', '月', '火', '水', '木', '金', '土'],
       publicHoliday: '',
-      today: moment().format('YYYY-M-D')
+      today: moment().format('YYYY-M-D'),
+      modalState: false
     }
   },
   created() {
@@ -102,7 +111,7 @@ export default {
       for(let i = 0; i < 7; i++) {
         calendarData[i].week = this.week[i];
       }
-      // console.log(calendarData[0])
+      // console.log(calendarData)
       return calendarData;
     },
   },
@@ -112,7 +121,7 @@ export default {
         .get(`https://holidays-jp.github.io/api/v1/${currentYear}/date.json`)
         .then(respose => {
           this.publicHoliday = respose.data;
-          // console.log(this.publicHoliday);
+          console.log(this.publicHoliday);
         })
         .catch(e => {
           alert(e);
@@ -123,7 +132,14 @@ export default {
     },
     decrement() {
       this.current --;
-    }
+    },
+    modalShow(id) {
+      this.modalState = true;
+      this.$refs.modal.childeEvent(id);
+    },
+    modalClose() {
+      this.modalState = false;
+    },
   }
 }
 </script>
@@ -183,6 +199,7 @@ export default {
   border: 1px solid #ccc;
   background: #ccc;
   >div {
+    cursor: pointer;
     background: #fff;
   }
   .other-month {
@@ -250,4 +267,11 @@ div[data-holiday] {
   color: #990000;
   font-size: 12px;
 }
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
 </style>
