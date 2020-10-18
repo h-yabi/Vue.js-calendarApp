@@ -2,7 +2,21 @@
   <div class="modal-wrap">
     <div class="modal">
       <div class="modal-date">{{id}}</div>
-
+      <v-form>
+        <v-col
+          cols="12"
+          sm="6"
+          md="3"
+        >
+          <v-text-field
+            label="予定を入れる"
+          ></v-text-field>
+        </v-col>
+        <v-btn
+          color="primary"
+          elevation="2"
+        >予定を追加</v-btn>
+      </v-form>
     </div>
     <div class="modalBg" @click="modalClose"></div>
   </div>
@@ -32,6 +46,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+.v-application {
+  min-height: 100% !important;
+  // height: 100px;
+  overflow: hidden;
+}
 .modal {
   position: fixed;
   z-index: 1;
@@ -45,6 +64,9 @@ export default {
   box-sizing:border-box;
   transform: translate(-50%, -50%);
   box-shadow: 3px 6px 16px -6px rgba(0,0,0,0.6);
+}
+.modal-date {
+  margin-bottom: 20px;
 }
 .modalBg {
   position: fixed;
@@ -60,5 +82,14 @@ export default {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+.v-input {
+  width: 100%;
+  max-width: 200px;
+  margin: auto;
+}
+.col-md-3 {
+  max-width: none;
+  padding: 0;
 }
 </style>

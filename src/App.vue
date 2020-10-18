@@ -1,39 +1,44 @@
 <template>
-  <div id="app">
-    <div class="calendar-header">
-      <button @click="decrement" class="button prev">前の月</button>
-      {{yearAndMonth}}
-      <button @click="increment" class="button next">次の月</button>
-    </div>
-    <div class="calendar-body">
-      <div
-        v-for="data in createCalendar"
-        :key="data.id"
-        :data-id="data.id"
-        :data-week="data.weekNumber"
-        :data-today="data.id == today"
-        :data-holiday="Object.keys(publicHoliday).indexOf(data.id) != -1 || data.id.slice(-5) === '01-01' && true"
-        :class="data.class"
-        @click="modalShow(data.id)"
-      >
-        <div v-if="data.week" class="week">{{data.week}}</div>
-        <div class="date-wrap">
-          <div class="date">{{data.date}}</div>
-          <div v-if="Object.keys(publicHoliday).indexOf(data.id) != -1" class="publicHoliday-text">
-            {{publicHoliday[data.id]}}
+  <v-app>
+    <div class="calendar">
+      <div class="calendar-header">
+        <button @click="decrement" class="button prev">前の月</button>
+        {{yearAndMonth}}
+        <button @click="increment" class="button next">次の月</button>
+      </div>
+      <div class="calendar-body">
+        <div
+          v-for="data in createCalendar"
+          :key="data.id"
+          :data-id="data.id"
+          :data-week="data.weekNumber"
+          :data-today="data.id == today"
+          :data-holiday="Object.keys(publicHoliday).indexOf(data.id) != -1 || data.id.slice(-5) === '01-01' && true"
+          :class="data.class"
+          @click="modalShow(data.id)"
+        >
+          <div v-if="data.week" class="week">{{data.week}}</div>
+          <div class="date-wrap">
+            <div class="date">{{data.date}}</div>
+            <div v-if="Object.keys(publicHoliday).indexOf(data.id) != -1" class="publicHoliday-text">
+              {{publicHoliday[data.id]}}
+            </div>
+            <div v-else-if="data.id.slice(-5) === '01-01'" class="publicHoliday-text">元日</div>
           </div>
-          <div v-else-if="data.id.slice(-5) === '01-01'" class="publicHoliday-text">元日</div>
         </div>
       </div>
+
+      <transition name="fade">
+        <div v-show="modalState">
+          <Modal :modal-state="modalState" @modal-close="modalClose" ref="modal"></Modal>
+        </div>
+      </transition>
+
     </div>
+  </v-app>
 
-    <transition name="fade">
-      <div v-show="modalState">
-        <Modal :modal-state="modalState" @modal-close="modalClose" ref="modal"></Modal>
-      </div>
-    </transition>
 
-  </div>
+
 </template>
 
 <script>
@@ -145,13 +150,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#app {
+.calendar {
+  margin: 30px 15px 0;
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 .calendar-header {
   display: flex;
@@ -272,6 +275,9 @@ div[data-holiday] {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
+}
+.v-application--wrap {
+  min-height: none;
 }
 
 </style>
