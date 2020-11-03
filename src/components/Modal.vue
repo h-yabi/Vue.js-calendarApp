@@ -2,7 +2,7 @@
   <div class="modal-wrap">
     <div class="modal">
       <div class="modal-date">{{id}}</div>
-      <v-form v-on:submit.prevent="emitTodoEvent(id)">
+      <v-form v-on:submit.prevent="emitTodoEvent(id)" name="form">
         <v-col
           cols="12"
           sm="6"
@@ -11,6 +11,7 @@
           <v-text-field
             label="予定を入れる"
             v-model="schedule"
+            id="inputTodo"
           ></v-text-field>
         </v-col>
         <v-btn
@@ -40,10 +41,14 @@ export default {
     modalClose() {
       this.$emit("modal-close");
     },
-    childeEvent(id) {
+    modalShow(id) {
       this.id = id;
+      setTimeout(function() {
+        document.getElementById('inputTodo').focus();
+      }, 10);
     },
     emitTodoEvent(date) {
+      if(this.schedule === '') return;
       this.$emit("add-todo", {date, title: this.schedule});
       this.schedule = '';
     }

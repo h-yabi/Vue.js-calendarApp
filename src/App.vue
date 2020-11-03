@@ -62,7 +62,7 @@ export default {
       current: 0,
       week: ['日', '月', '火', '水', '木', '金', '土'],
       publicHoliday: '',
-      today: moment().format('YYYY-M-D'),
+      today: moment().format('YYYY-MM-DD'),
       modalState: false,
       todoList: []
     }
@@ -122,7 +122,7 @@ export default {
       for(let i = 0; i < 7; i++) {
         calendarData[i].week = this.week[i];
       }
-      console.log(calendarData)
+      // console.log(calendarData)
       return calendarData;
     },
   },
@@ -146,12 +146,13 @@ export default {
     },
     modalShow(id) {
       this.modalState = true;
-      this.$refs.modal.childeEvent(id);
+      this.$refs.modal.modalShow(id);
     },
     modalClose() {
       this.modalState = false;
     },
     addTodo(el) {
+      this.modalState = false;
       this.todoList.push({
         date: el.date,
         title: el.title
@@ -252,9 +253,6 @@ div[data-week="6"] {
   background: #CCF9FF;
   color: #0000FF;
 }
-div[data-today] {
-  background: rgb(255, 255, 107);
-}
 div[data-holiday] {
   &.current-month {
     background: #FFD1D1;
@@ -264,6 +262,11 @@ div[data-holiday] {
     .date {
       background: #ffa67f;
     }
+  }
+}
+div[data-today] {
+  &.current-month {
+    background: rgb(255, 255, 107);
   }
 }
 .date-wrap {
