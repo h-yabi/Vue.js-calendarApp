@@ -2,7 +2,7 @@
   <div class="modal-wrap">
     <div class="modal">
       <div class="modal-date">{{id}}</div>
-      <v-form>
+      <v-form v-on:submit.prevent="emitTodoEvent(id)">
         <v-col
           cols="12"
           sm="6"
@@ -10,11 +10,13 @@
         >
           <v-text-field
             label="予定を入れる"
+            v-model="schedule"
           ></v-text-field>
         </v-col>
         <v-btn
           color="primary"
           elevation="2"
+          type="submit"
         >予定を追加</v-btn>
       </v-form>
     </div>
@@ -31,6 +33,7 @@ export default {
   data() {
     return {
       id: null,
+      schedule: ''
     }
   },
   methods: {
@@ -39,6 +42,10 @@ export default {
     },
     childeEvent(id) {
       this.id = id;
+    },
+    emitTodoEvent(date) {
+      this.$emit("add-todo", {date, title: this.schedule});
+      this.schedule = '';
     }
   }
 }

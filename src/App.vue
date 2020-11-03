@@ -25,12 +25,17 @@
             </div>
             <div v-else-if="data.id.slice(-5) === '01-01'" class="publicHoliday-text">元日</div>
           </div>
+          <ul class="todoList">
+            <template v-for="todo in todoList">
+              <li v-if="todo.date == data.id" :key="todo.id">{{todo.title}}</li>
+            </template>
+          </ul>
         </div>
       </div>
 
       <transition name="fade">
         <div v-show="modalState">
-          <Modal :modal-state="modalState" @modal-close="modalClose" ref="modal"></Modal>
+          <Modal :modal-state="modalState" @modal-close="modalClose" ref="modal" @add-todo="addTodo"></Modal>
         </div>
       </transition>
 
@@ -58,7 +63,8 @@ export default {
       week: ['日', '月', '火', '水', '木', '金', '土'],
       publicHoliday: '',
       today: moment().format('YYYY-M-D'),
-      modalState: false
+      modalState: false,
+      todoList: []
     }
   },
   created() {
@@ -116,7 +122,7 @@ export default {
       for(let i = 0; i < 7; i++) {
         calendarData[i].week = this.week[i];
       }
-      // console.log(calendarData)
+      console.log(calendarData)
       return calendarData;
     },
   },
@@ -126,7 +132,7 @@ export default {
         .get(`https://holidays-jp.github.io/api/v1/${currentYear}/date.json`)
         .then(respose => {
           this.publicHoliday = respose.data;
-          console.log(this.publicHoliday);
+          // console.log(this.publicHoliday);
         })
         .catch(e => {
           alert(e);
@@ -145,6 +151,13 @@ export default {
     modalClose() {
       this.modalState = false;
     },
+    addTodo(el) {
+      this.todoList.push({
+        date: el.date,
+        title: el.title
+      });
+      console.log(this.todoList)
+    }
   }
 }
 </script>
@@ -278,6 +291,14 @@ div[data-holiday] {
 }
 .v-application--wrap {
   min-height: none;
+}
+.todoList {
+  padding-left: 0;
+  li {
+    list-style: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 </style>
