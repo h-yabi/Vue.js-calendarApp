@@ -25,11 +25,17 @@
             </div>
             <div v-else-if="data.id.slice(-5) === '01-01'" class="publicHoliday-text">元日</div>
           </div>
-          <ul class="todoList">
-            <template v-for="todo in todoList">
-              <li v-if="todo.date == data.id" :key="todo.id">{{todo.title}}</li>
-            </template>
-          </ul>
+          <template v-for="todo in todoList">
+            <div class="todoList" v-if="todo.date == data.id" :key="todo.id">
+              <template v-for="(title, index) in todo.title">
+                <div class="todoItem" :key="index">{{title}}</div>
+              </template>
+              <div
+                class="todoNum"
+                v-if="todo.title.length > 3"
+              >他{{todo.title.length - 3}}件</div>
+            </div>
+          </template>
         </div>
       </div>
 
@@ -64,7 +70,9 @@ export default {
       publicHoliday: '',
       today: moment().format('YYYY-MM-DD'),
       modalState: false,
-      todoList: []
+      todoList: [],
+      dateArray: [],
+      filteringDateArray: []
     }
   },
   created() {
@@ -152,13 +160,33 @@ export default {
       this.modalState = false;
     },
     addTodo(el) {
+      const that = this;
       this.modalState = false;
-      this.todoList.push({
-        date: el.date,
-        title: el.title
+
+      if(this.todoList.length < 1) {
+        this.todoList.push({
+          date: el.date,
+          title: [el.title]
+        });
+      } else {
+        let num = that.filteringDateArray.indexOf(el.date);
+        if(that.filteringDateArray.indexOf(el.date) === -1) {
+          this.todoList.push({
+            date: el.date,
+            title: [el.title]
+          });
+        } else {
+          this.todoList[num].title.push(el.title);
+        }
+      }
+
+      that.dateArray = this.todoList.map(todo => todo.date)
+      that.filteringDateArray = that.dateArray.filter(function (date, index, self) {
+        return self.indexOf(date) === index;
       });
+
       console.log(this.todoList)
-    }
+    },
   }
 }
 </script>
@@ -216,7 +244,6 @@ export default {
   border: 1px solid #ccc;
   background: #ccc;
   >div {
-    cursor: pointer;
     background: #fff;
   }
   .other-month {
@@ -227,8 +254,8 @@ export default {
   overflow: hidden;
   > div {
     position: relative;
-    min-height: 100px;
-    padding: 5px 10px;
+    min-height: 120px;
+    padding: 5px 10px 10px;
     font-size: 14px;
     &:nth-child(1) {
       .week {
@@ -242,7 +269,7 @@ export default {
     }
   }
   .date {
-    font-size: 16px;
+    font-size: 14px;
   }
 }
 div[data-week="0"] {
@@ -278,8 +305,8 @@ div[data-today] {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
 }
 .publicHoliday-text {
@@ -297,11 +324,27 @@ div[data-today] {
 }
 .todoList {
   padding-left: 0;
-  li {
-    list-style: none;
-    overflow: hidden;
-    text-overflow: ellipsis;
+}
+.todoItem {
+  margin-top: 2px;
+  padding: 0 4px;
+  border-radius: 4px;
+  background-color: rgb(215, 219, 239);
+  color: #2c3e50;
+  font-size: 12px;
+  text-align: left;
+  list-style: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  &:nth-child(n + 4) {
+    display: none;
   }
 }
+.todoNum {
+  margin-top: 5px;
+  font-size: 12px;
+}
+
 
 </style>
