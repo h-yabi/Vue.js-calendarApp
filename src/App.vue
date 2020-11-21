@@ -135,16 +135,13 @@ export default {
     },
   },
   methods: {
-    getpublicHoliday(currentYear) {
-      axios
-        .get(`https://holidays-jp.github.io/api/v1/${currentYear}/date.json`)
-        .then(respose => {
-          this.publicHoliday = respose.data;
-          // console.log(this.publicHoliday);
-        })
-        .catch(e => {
-          alert(e);
-        });
+    async getpublicHoliday(currentYear) {
+      try {
+        const response = await axios.get(`https://holidays-jp.github.io/api/v1/${currentYear}/date.json`);
+        this.publicHoliday = response.data;
+      } catch (error) {
+        console.log(error);
+      }
     },
     increment() {
       this.current ++;
@@ -182,9 +179,12 @@ export default {
 
       that.dateArray = this.todoList.map(todo => todo.date)
       that.filteringDateArray = that.dateArray.filter(function (date, index, self) {
+        // console.log(self)
+        // console.log(index)
         return self.indexOf(date) === index;
       });
 
+      console.log(that.dateArray)
       console.log(this.todoList)
     },
   }
