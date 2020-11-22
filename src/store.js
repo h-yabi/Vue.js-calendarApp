@@ -6,14 +6,12 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   // プロジェクト全体で使うstateを入れる
   state: {
-    modalState: false,
     todoList: [],
     dateArray: [],
     filteringDateArray: []
   },
   mutations: {
     addTodo(state, el) {
-      this.modalState = false;
 
       if(state.todoList.length < 1) {
         state.todoList.push({

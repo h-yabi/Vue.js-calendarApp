@@ -1,66 +1,52 @@
 <template>
-  <div class="modal-wrap">
-    <div class="modal">
-      <div class="modal-date">{{id}}</div>
-      <v-form v-on:submit.prevent="emitTodoEvent(id)" name="form">
-        <v-col
-          cols="12"
-          sm="6"
-          md="3"
-        >
-          <v-text-field
-            label="予定を入れる"
-            v-model="schedule"
-            id="inputTodo"
-          ></v-text-field>
-        </v-col>
-        <v-btn
-          color="primary"
-          elevation="2"
-          type="submit"
-        >予定を追加</v-btn>
-      </v-form>
+  <transition name="fade">
+    <div v-show="modalState">
+      <div class="modal-wrap">
+        <div class="modal">
+          <div class="modal-date">{{id}}</div>
+          <Form :id="id" @modal-close="modalClose" @add-todo="addTodo"></Form>
+        </div>
+        <div class="modalBg" @click="modalClose"></div>
+      </div>
     </div>
-    <div class="modalBg" @click="modalClose"></div>
-  </div>
+  </transition>
+
 </template>
 
 <script>
+import Form from './Form';
+import { mapActions } from 'vuex';
+
 export default {
   name: 'Modal',
+  components: {
+    Form
+  },
   data() {
     return {
       id: null,
-      schedule: ''
+      modalState: false,
     }
   },
   methods: {
-    modalClose() {
-      this.$emit("modal-close");
-    },
     modalShow(id) {
+      this.modalState = true;
       this.id = id;
+      this.sample = true;
       setTimeout(function() {
         document.getElementById('inputTodo').focus();
       }, 10);
     },
-    emitTodoEvent(date) {
-      if(this.schedule === '') return;
-      this.$emit("add-todo", {date, title: this.schedule});
-      this.$emit("modal-close");
-      this.schedule = '';
-    }
+    modalClose() {
+      this.modalState = false;
+    },
+    ...mapActions(["addTodo"]),
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.v-application {
-  min-height: 100% !important;
-  // height: 100px;
-  overflow: hidden;
-}
 .modal {
   position: fixed;
   z-index: 1;
@@ -86,20 +72,5 @@ export default {
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, .3);
-}
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-.v-input {
-  width: 100%;
-  max-width: 200px;
-  margin: auto;
-}
-.col-md-3 {
-  max-width: none;
-  padding: 0;
 }
 </style>

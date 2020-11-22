@@ -39,11 +39,14 @@
         </div>
       </div>
 
-      <transition name="fade">
+      <!-- <transition name="fade">
         <div v-show="modalState">
-          <Modal @modal-close="modalClose" ref="modal" @add-todo="addTodo"></Modal>
+          <Modal ref="modal"></Modal>
         </div>
-      </transition>
+      </transition> -->
+
+      <Modal ref="modal"></Modal>
+
 
     </div>
   </v-app>
@@ -56,8 +59,6 @@
 import Modal from './components/Modal.vue'
 import moment from 'moment';
 import axios from 'axios';
-import { mapActions } from 'vuex';
-
 
 export default {
   name: 'App',
@@ -70,7 +71,6 @@ export default {
       week: ['日', '月', '火', '水', '木', '金', '土'],
       publicHoliday: '',
       today: moment().format('YYYY-MM-DD'),
-      modalState: false,
     }
   },
   created() {
@@ -148,13 +148,8 @@ export default {
       this.current --;
     },
     modalShow(id) {
-      this.modalState = true;
       this.$refs.modal.modalShow(id);
     },
-    modalClose() {
-      this.modalState = false;
-    },
-    ...mapActions(["addTodo"]),
   }
 }
 </script>
