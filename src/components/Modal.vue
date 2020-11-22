@@ -28,9 +28,6 @@
 <script>
 export default {
   name: 'Modal',
-  props: {
-    modalState: Boolean,
-  },
   data() {
     return {
       id: null,
@@ -50,6 +47,7 @@ export default {
     emitTodoEvent(date) {
       if(this.schedule === '') return;
       this.$emit("add-todo", {date, title: this.schedule});
+      this.$emit("modal-close");
       this.schedule = '';
     }
   }

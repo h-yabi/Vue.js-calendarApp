@@ -3,7 +3,7 @@
     <div class="calendar">
       <div class="calendar-header">
         <button @click="decrement" class="button prev">前の月</button>
-        {{yearAndMonth}}
+        {{ yearAndMonth }}
         <button @click="increment" class="button next">次の月</button>
       </div>
       <div class="calendar-body">
@@ -25,7 +25,7 @@
             </div>
             <div v-else-if="data.id.slice(-5) === '01-01'" class="publicHoliday-text">元日</div>
           </div>
-          <template v-for="todo in todoList">
+          <template v-for="todo in $store.state.todoList">
             <div class="todoList" v-if="todo.date == data.id" :key="todo.id">
               <template v-for="(title, index) in todo.title">
                 <div class="todoItem" :key="index">{{title}}</div>
@@ -41,7 +41,7 @@
 
       <transition name="fade">
         <div v-show="modalState">
-          <Modal :modal-state="modalState" @modal-close="modalClose" ref="modal" @add-todo="addTodo"></Modal>
+          <Modal @modal-close="modalClose" ref="modal" @add-todo="addTodo"></Modal>
         </div>
       </transition>
 
@@ -56,6 +56,7 @@
 import Modal from './components/Modal.vue'
 import moment from 'moment';
 import axios from 'axios';
+import { mapActions } from 'vuex';
 
 
 export default {
@@ -70,9 +71,6 @@ export default {
       publicHoliday: '',
       today: moment().format('YYYY-MM-DD'),
       modalState: false,
-      todoList: [],
-      dateArray: [],
-      filteringDateArray: []
     }
   },
   created() {
@@ -156,37 +154,7 @@ export default {
     modalClose() {
       this.modalState = false;
     },
-    addTodo(el) {
-      const that = this;
-      this.modalState = false;
-
-      if(this.todoList.length < 1) {
-        this.todoList.push({
-          date: el.date,
-          title: [el.title]
-        });
-      } else {
-        let num = that.filteringDateArray.indexOf(el.date);
-        if(that.filteringDateArray.indexOf(el.date) === -1) {
-          this.todoList.push({
-            date: el.date,
-            title: [el.title]
-          });
-        } else {
-          this.todoList[num].title.push(el.title);
-        }
-      }
-
-      that.dateArray = this.todoList.map(todo => todo.date)
-      that.filteringDateArray = that.dateArray.filter(function (date, index, self) {
-        // console.log(self)
-        // console.log(index)
-        return self.indexOf(date) === index;
-      });
-
-      console.log(that.dateArray)
-      console.log(this.todoList)
-    },
+    ...mapActions(["addTodo"]),
   }
 }
 </script>
