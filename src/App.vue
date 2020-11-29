@@ -28,7 +28,7 @@
           <template v-for="todo in $store.state.todoList">
             <div class="todoList" v-if="todo.date == data.id" :key="todo.id">
               <template v-for="(title, index) in todo.title">
-                <div class="todoItem" :key="index" @click="showTodo(data.id, title)">{{title}}</div>
+                <div class="todoItem" :key="index" @click="showTodo(data.id, title, index)">{{title}}</div>
               </template>
               <div
                 class="todoNum"
@@ -144,8 +144,8 @@ export default {
     showTodoForm(id) {
       this.$refs.modal.showTodoForm(id);
     },
-    showTodo(id, title) {
-      this.$refs.modal.showTodo(id, title);
+    showTodo(id, title, index) {
+      this.$refs.modal.showTodo(id, title, index);
     }
   }
 }

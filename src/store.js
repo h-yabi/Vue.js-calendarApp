@@ -28,19 +28,32 @@ export default new Vuex.Store({
           state.todoList[num].title.push(el.title);
         }
       }
-
       state.dateArray = state.todoList.map(todo => todo.date)
       state.filteringDateArray = state.dateArray.filter(function (date, index, self) {
         return self.indexOf(date) === index;
       });
-
-      // console.log(state.dateArray)
-      console.log(state.todoList)
+      console.log(state.todoList);
     },
+    deleteTodo(state, data) {
+      state.todoList.map(todo => {
+        if (todo.date == data.id) {
+          return todo.title.splice(data.todoId, 1)
+        }
+      })
+      console.log(state.todoList);
+    }
   },
   actions: {
     addTodo({ commit }, el) {
       commit('addTodo', el);
+    },
+    deleteTodo({ commit }, { id, title, todoId }) {
+      const data = {
+        id,
+        title,
+        todoId
+      }
+      commit('deleteTodo', data);
     }
   },
   getters: {

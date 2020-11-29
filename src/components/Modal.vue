@@ -42,11 +42,11 @@ export default {
         document.getElementById('inputTodo').focus();
       }, 10);
     },
-    showTodo(id, title) {
+    showTodo(id, title, index) {
       this.modalState = true;
       this.todoState = true;
       this.id = id;
-      this.$refs.todo.showTodo(title);
+      this.$refs.todo.showTodo(id, title, index);
     },
     modalClose() {
       this.modalState = false;

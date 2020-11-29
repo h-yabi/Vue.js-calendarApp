@@ -1,22 +1,32 @@
 <template>
   <div class="todo">
     <div class="todo-text">{{ title }}</div>
-    <div class="todo-delete"><v-icon>fas fa-times-circle</v-icon></div>
+    <div class="todo-delete" @click="deleteItem(id, title, todoId)"><v-icon>fas fa-times-circle</v-icon></div>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'Todo',
   data() {
     return {
+      id: null,
       title: null,
+      todoId: null,
     }
   },
   methods: {
-    showTodo(title) {
+    showTodo(id, title, index) {
+      this.id = id;
       this.title = title;
-    }
+      this.todoId = index;
+    },
+    deleteItem(id, title, todoId) {
+      this.deleteTodo({id, title, todoId});
+    },
+    ...mapActions(['deleteTodo'])
   }
 }
 </script>
@@ -38,9 +48,9 @@ export default {
 .todo-delete {
   display: flex;
   align-items: center;
-  cursor: pointer;
 }
 .v-icon.v-icon {
   font-size: 18px;
+  cursor: pointer;
 }
 </style>
