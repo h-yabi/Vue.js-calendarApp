@@ -1,7 +1,7 @@
 <template>
   <div class="todo">
     <div class="todo-text">{{ title }}</div>
-    <div class="todo-delete"><span></span></div>
+    <div class="todo-delete"><v-icon>fas fa-times-circle</v-icon></div>
   </div>
 </template>
 
@@ -16,7 +16,6 @@ export default {
   methods: {
     showTodo(title) {
       this.title = title;
-
     }
   }
 }
@@ -24,9 +23,11 @@ export default {
 
 <style lang="scss" scoped>
 .todo {
+  display: flex;
+  justify-content: space-between;
   position: relative;
   margin-top: 2px;
-  padding: 3px 5px;
+  padding: 5px;
   border-radius: 4px;
   background-color: #d7dbef;
   color: #2c3e50;
@@ -34,24 +35,12 @@ export default {
   text-align: left;
   word-break: break-all;
 }
-.todo-text {
-  width: 90%;
-}
 .todo-delete {
-  position: absolute;
-  top: 50%;
-  right: 5px;
-  transform: translateY(-50%);
-  span {
-    display: block;
-    position: relative;
-    width: 15px;
-    height: 15px;
-    &:before,
-    &:after {
-      position: absolute;
-      content: "";
-    }
-  }
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.v-icon.v-icon {
+  font-size: 18px;
 }
 </style>
