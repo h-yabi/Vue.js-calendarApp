@@ -12,7 +12,6 @@ export default new Vuex.Store({
   },
   mutations: {
     addTodo(state, el) {
-
       if(state.todoList.length < 1) {
         state.todoList.push({
           date: el.date,

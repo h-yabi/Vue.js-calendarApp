@@ -4,7 +4,8 @@
       <div class="modal-wrap">
         <div class="modal">
           <div class="modal-date">{{id}}</div>
-          <Form :id="id" @modal-close="modalClose" @add-todo="addTodo"></Form>
+          <Form v-show="formState" :id="id" @modal-close="modalClose" @add-todo="addTodo"></Form>
+          <Todo v-show="todoState" ref="todo"></Todo>
         </div>
         <div class="modalBg" @click="modalClose"></div>
       </div>
@@ -15,44 +16,56 @@
 
 <script>
 import Form from './Form';
+import Todo from './Todo';
 import { mapActions } from 'vuex';
 
 export default {
   name: 'Modal',
   components: {
-    Form
+    Form,
+    Todo
   },
   data() {
     return {
       id: null,
       modalState: false,
+      formState: false,
+      todoState: false,
     }
   },
   methods: {
-    modalShow(id) {
+    showTodoForm(id) {
       this.modalState = true;
+      this.formState = true;
       this.id = id;
-      this.sample = true;
       setTimeout(function() {
         document.getElementById('inputTodo').focus();
       }, 10);
     },
+    showTodo(id, title) {
+      this.modalState = true;
+      this.todoState = true;
+      this.id = id;
+      this.$refs.todo.showTodo(title);
+    },
     modalClose() {
       this.modalState = false;
+      this.formState = false;
+      this.todoState = false;
     },
     ...mapActions(["addTodo"]),
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .modal {
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   top: 50%;
   left: 50%;
-  min-width: 300px;
+  width: 100%;
+  max-width: 300px;
   min-height: 200px;
   padding: 20px 15px;
   background: #fff;
@@ -66,7 +79,7 @@ export default {
 }
 .modalBg {
   position: fixed;
-  z-index: 0;
+  z-index: 1;
   top: 0;
   left: 0;
   width: 100vw;

@@ -15,8 +15,8 @@
           :data-today="data.id == today"
           :data-holiday="Object.keys(publicHoliday).indexOf(data.id) != -1 || data.id.slice(-5) === '01-01' && true"
           :class="data.class"
-          @click="modalShow(data.id)"
         >
+          <div class="addTodo" @click="showTodoForm(data.id)"></div>
           <div v-if="data.week" class="week">{{data.week}}</div>
           <div class="date-wrap">
             <div class="date">{{data.date}}</div>
@@ -28,7 +28,7 @@
           <template v-for="todo in $store.state.todoList">
             <div class="todoList" v-if="todo.date == data.id" :key="todo.id">
               <template v-for="(title, index) in todo.title">
-                <div class="todoItem" :key="index">{{title}}</div>
+                <div class="todoItem" :key="index" @click="showTodo(data.id, title)">{{title}}</div>
               </template>
               <div
                 class="todoNum"
@@ -38,12 +38,6 @@
           </template>
         </div>
       </div>
-
-      <!-- <transition name="fade">
-        <div v-show="modalState">
-          <Modal ref="modal"></Modal>
-        </div>
-      </transition> -->
 
       <Modal ref="modal"></Modal>
 
@@ -147,9 +141,12 @@ export default {
     decrement() {
       this.current --;
     },
-    modalShow(id) {
-      this.$refs.modal.modalShow(id);
+    showTodoForm(id) {
+      this.$refs.modal.showTodoForm(id);
     },
+    showTodo(id, title) {
+      this.$refs.modal.showTodo(id, title);
+    }
   }
 }
 </script>
@@ -272,6 +269,13 @@ div[data-today] {
   height: 20px;
   border-radius: 50%;
 }
+.addTodo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
 .publicHoliday-text {
   color: #990000;
   font-size: 12px;
@@ -286,6 +290,7 @@ div[data-today] {
   min-height: none;
 }
 .todoList {
+  position: relative;
   padding-left: 0;
 }
 .todoItem {
@@ -307,6 +312,7 @@ div[data-today] {
 .todoNum {
   margin-top: 5px;
   font-size: 12px;
+  cursor: pointer;
 }
 
 
