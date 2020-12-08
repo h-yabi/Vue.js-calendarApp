@@ -1,13 +1,13 @@
 <template>
   <transition name="fade">
-    <div v-show="modalState">
+    <div v-show="$store.state.modalState">
       <div class="modal-wrap">
         <div class="modal">
           <div class="modal-date">{{id}}</div>
-          <Form v-show="formState" :id="id" @modal-close="modalClose" @add-todo="addTodo"></Form>
+          <Form v-show="formState" :id="id" @modal-close="modalClose('close')" @add-todo="addTodo"></Form>
           <Todo v-show="todoState" ref="todo"></Todo>
         </div>
-        <div class="modalBg" @click="modalClose"></div>
+        <div class="modalBg" @click="modalClose('close')"></div>
       </div>
     </div>
   </transition>
@@ -28,32 +28,31 @@ export default {
   data() {
     return {
       id: null,
-      modalState: false,
       formState: false,
       todoState: false,
     }
   },
   methods: {
-    showTodoForm(id) {
-      this.modalState = true;
+    showTodoForm(id, modalState) {
+      this.modalState(modalState);
       this.formState = true;
       this.id = id;
       setTimeout(function() {
         document.getElementById('inputTodo').focus();
       }, 10);
     },
-    showTodo(id, title, index) {
-      this.modalState = true;
+    showTodo(id, index, modalState) {
+      this.modalState(modalState);
       this.todoState = true;
       this.id = id;
-      this.$refs.todo.showTodo(id, title, index);
+      this.$refs.todo.showTodo(id, index);
     },
-    modalClose() {
-      this.modalState = false;
+    modalClose(modalState) {
+      this.modalState(modalState);
       this.formState = false;
       this.todoState = false;
     },
-    ...mapActions(["addTodo"]),
+    ...mapActions(["addTodo", "modalState"]),
   }
 }
 </script>

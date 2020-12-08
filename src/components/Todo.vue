@@ -1,7 +1,20 @@
 <template>
   <div class="todo">
-    <div class="todo-text">{{ title }}</div>
-    <div class="todo-delete" @click="deleteItem(id, title, todoId)"><v-icon>fas fa-times-circle</v-icon></div>
+    <template v-for="todo in $store.state.todoList">
+      <div class="todoList" v-if="todo.date == id" :key="todo.id">
+        <template v-for="(title, index) in todo.title">
+          <div class="todoItem" :key="index">
+            {{title}}
+            <div class="todo-delete" @click="deleteItem(todo.date, index, todo.title)"><v-icon>fas fa-times-circle</v-icon></div>
+            </div>
+        </template>
+        <div
+          class="todoNum"
+          v-if="todo.title.length > 3"
+        >他{{todo.title.length - 3}}件</div>
+      </div>
+    </template>
+
   </div>
 </template>
 
@@ -13,26 +26,24 @@ export default {
   data() {
     return {
       id: null,
-      title: null,
       todoId: null,
     }
   },
   methods: {
-    showTodo(id, title, index) {
-      this.id = id;
-      this.title = title;
-      this.todoId = index;
+    showTodo(id, index) {
+      this.id = id; // 日付 2020-12-01 など
+      this.todoId = index; // todo ID
     },
-    deleteItem(id, title, todoId) {
-      this.deleteTodo({id, title, todoId});
+    deleteItem(id, index, length) {
+      this.deleteTodo({id, index, length});
     },
-    ...mapActions(['deleteTodo'])
+    ...mapActions(['deleteTodo']),
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.todo {
+.todoItem {
   display: flex;
   justify-content: space-between;
   position: relative;

@@ -16,7 +16,7 @@
           :data-holiday="Object.keys(publicHoliday).indexOf(data.id) != -1 || data.id.slice(-5) === '01-01' && true"
           :class="data.class"
         >
-          <div class="addTodo" @click="showTodoForm(data.id)"></div>
+          <div class="addTodo" @click="showTodoForm(data.id, 'open')"></div>
           <div v-if="data.week" class="week">{{data.week}}</div>
           <div class="date-wrap">
             <div class="date">{{data.date}}</div>
@@ -28,7 +28,7 @@
           <template v-for="todo in $store.state.todoList">
             <div class="todoList" v-if="todo.date == data.id" :key="todo.id">
               <template v-for="(title, index) in todo.title">
-                <div class="todoItem" :key="index" @click="showTodo(data.id, title, index)">{{title}}</div>
+                <div class="todoItem" :key="index" @click="showTodo(data.id, index, 'open')">{{title}}</div>
               </template>
               <div
                 class="todoNum"
@@ -141,11 +141,11 @@ export default {
     decrement() {
       this.current --;
     },
-    showTodoForm(id) {
-      this.$refs.modal.showTodoForm(id);
+    showTodoForm(id, modalOpen) {
+      this.$refs.modal.showTodoForm(id, modalOpen);
     },
-    showTodo(id, title, index) {
-      this.$refs.modal.showTodo(id, title, index);
+    showTodo(id, index, modalState) {
+      this.$refs.modal.showTodo(id, index, modalState);
     }
   }
 }

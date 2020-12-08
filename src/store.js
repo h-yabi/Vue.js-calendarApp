@@ -8,7 +8,8 @@ export default new Vuex.Store({
   state: {
     todoList: [],
     dateArray: [],
-    filteringDateArray: []
+    filteringDateArray: [],
+    modalState: false,
   },
   mutations: {
     addTodo(state, el) {
@@ -32,29 +33,40 @@ export default new Vuex.Store({
       state.filteringDateArray = state.dateArray.filter(function (date, index, self) {
         return self.indexOf(date) === index;
       });
-      console.log(state.todoList);
+      // console.log(state.todoList);
     },
     deleteTodo(state, data) {
       state.todoList.map(todo => {
         if (todo.date == data.id) {
-          return todo.title.splice(data.todoId, 1)
+          return todo.title.splice(data.index, 1)
         }
       })
+      if (data.length.length === 0) {
+        state.modalState = false;
+      }
       console.log(state.todoList);
+    },
+    modalState(state, boolean) {
+      const sample = boolean === 'open' ? true : false;
+      state.modalState = sample;
     }
   },
   actions: {
     addTodo({ commit }, el) {
       commit('addTodo', el);
     },
-    deleteTodo({ commit }, { id, title, todoId }) {
+    deleteTodo({ commit }, { id, index, length }) {
       const data = {
         id,
-        title,
-        todoId
+        index,
+        length
       }
       commit('deleteTodo', data);
-    }
+    },
+    modalState({ commit }, boolean) {
+      commit('modalState', boolean);
+    },
+
   },
   getters: {
 
