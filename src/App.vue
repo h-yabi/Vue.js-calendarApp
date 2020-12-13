@@ -144,12 +144,12 @@ export default {
       this.current --;
     },
     showTodoForm(id, modalOpen) {
-      this.$refs.modal.showTodoForm(id, modalOpen);
+      this.showForm({ id, modalState: modalOpen });
     },
     showTodoItem(id, modalOpen) {
       this.showTodo({ id, modalState: modalOpen });
     },
-    ...mapActions(["showTodo"])
+    ...mapActions(["showForm", "showTodo"])
   }
 }
 </script>
@@ -317,6 +317,4 @@ div[data-today] {
   font-size: 12px;
   cursor: pointer;
 }
-
-
 </style>

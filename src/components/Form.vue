@@ -1,5 +1,5 @@
 <template>
-  <v-form v-on:submit.prevent="emitTodoEvent(id)" name="form">
+  <v-form v-on:submit.prevent="emitTodoEvent($store.state.id)" name="form">
     <v-col
       cols="12"
       sm="6"
@@ -23,7 +23,6 @@
 
 export default {
   name: 'Form',
-  props: ['id'],
   data() {
     return {
       schedule: ''

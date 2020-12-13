@@ -11,6 +11,7 @@ export default new Vuex.Store({
     filteringDateArray: [],
     id: null,
     modalState: false,
+    formState: false,
     todoState: false,
   },
   mutations: {
@@ -37,8 +38,16 @@ export default new Vuex.Store({
       });
       // console.log(state.todoList);
     },
+    showForm(state, data) {
+      const judgeModalState = data.modalState === 'open' ? true : false;
+      state.id = data.id;
+      state.formState = true;
+      state.modalState = judgeModalState;
+      setTimeout(function() {
+        document.getElementById('inputTodo').focus();
+      }, 10);
+    },
     showTodo(state, data) {
-      console.log(state, data)
       const judgeModalState = data.modalState === 'open' ? true : false;
       state.id = data.id;
       state.todoState = true;
@@ -60,12 +69,20 @@ export default new Vuex.Store({
       state.modalState = judgeModalState;
       if (!judgeModalState) {
         state.todoState = false;
+        state.formState = false;
       }
     }
   },
   actions: {
     addTodo({ commit }, el) {
       commit('addTodo', el);
+    },
+    showForm({ commit }, { id, modalState }) {
+      const data = {
+        id,
+        modalState
+      }
+      commit('showForm', data);
     },
     showTodo({ commit }, { id, modalState }) {
       const data = {
