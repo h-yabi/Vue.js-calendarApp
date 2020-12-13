@@ -3,9 +3,9 @@
     <div v-show="$store.state.modalState">
       <div class="modal-wrap">
         <div class="modal">
-          <div class="modal-date">{{id}}</div>
+          <div class="modal-date">{{ id }}</div>
           <Form v-show="formState" :id="id" @modal-close="modalClose('close')" @add-todo="addTodo"></Form>
-          <Todo v-show="todoState" ref="todo"></Todo>
+          <Todo v-show="$store.state.todoState" ref="todo"></Todo>
         </div>
         <div class="modalBg" @click="modalClose('close')"></div>
       </div>
@@ -41,18 +41,23 @@ export default {
         document.getElementById('inputTodo').focus();
       }, 10);
     },
-    showTodo(id, index, modalState) {
-      this.modalState(modalState);
-      this.todoState = true;
-      this.id = id;
-      this.$refs.todo.showTodo(id, index);
-    },
+    // showTodo(id, modalState) {
+    //   this.modalState(modalState);
+    //   this.todoState = true;
+    //   this.id = id;
+    //   this.$refs.todo.showTodo(id);
+    // },
     modalClose(modalState) {
       this.modalState(modalState);
       this.formState = false;
       this.todoState = false;
     },
     ...mapActions(["addTodo", "modalState"]),
+  },
+  computed: {
+    date() {
+      return this.$store.state.id;
+    }
   }
 }
 </script>

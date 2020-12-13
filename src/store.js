@@ -9,7 +9,9 @@ export default new Vuex.Store({
     todoList: [],
     dateArray: [],
     filteringDateArray: [],
+    id: null,
     modalState: false,
+    todoState: false,
   },
   mutations: {
     addTodo(state, el) {
@@ -35,6 +37,13 @@ export default new Vuex.Store({
       });
       // console.log(state.todoList);
     },
+    showTodo(state, data) {
+      console.log(state, data)
+      const judgeModalState = data.modalState === 'open' ? true : false;
+      state.id = data.id;
+      state.todoState = true;
+      state.modalState = judgeModalState;
+    },
     deleteTodo(state, data) {
       state.todoList.map(todo => {
         if (todo.date == data.id) {
@@ -47,13 +56,23 @@ export default new Vuex.Store({
       console.log(state.todoList);
     },
     modalState(state, boolean) {
-      const sample = boolean === 'open' ? true : false;
-      state.modalState = sample;
+      const judgeModalState = boolean === 'open' ? true : false;
+      state.modalState = judgeModalState;
+      if (!judgeModalState) {
+        state.todoState = false;
+      }
     }
   },
   actions: {
     addTodo({ commit }, el) {
       commit('addTodo', el);
+    },
+    showTodo({ commit }, { id, modalState }) {
+      const data = {
+        id,
+        modalState
+      }
+      commit('showTodo', data);
     },
     deleteTodo({ commit }, { id, index, length }) {
       const data = {

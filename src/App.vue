@@ -28,11 +28,12 @@
           <template v-for="todo in $store.state.todoList">
             <div class="todoList" v-if="todo.date == data.id" :key="todo.id">
               <template v-for="(title, index) in todo.title">
-                <div class="todoItem" :key="index" @click="showTodo(data.id, index, 'open')">{{title}}</div>
+                <div class="todoItem" :key="index" @click="showTodoItem(data.id, 'open')">{{title}}</div>
               </template>
               <div
                 class="todoNum"
                 v-if="todo.title.length > 3"
+                @click="showTodoItem(data.id, 'open')"
               >他{{todo.title.length - 3}}件</div>
             </div>
           </template>
@@ -53,6 +54,7 @@
 import Modal from './components/Modal.vue'
 import moment from 'moment';
 import axios from 'axios';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'App',
@@ -144,9 +146,10 @@ export default {
     showTodoForm(id, modalOpen) {
       this.$refs.modal.showTodoForm(id, modalOpen);
     },
-    showTodo(id, index, modalState) {
-      this.$refs.modal.showTodo(id, index, modalState);
-    }
+    showTodoItem(id, modalOpen) {
+      this.showTodo({ id, modalState: modalOpen });
+    },
+    ...mapActions(["showTodo"])
   }
 }
 </script>
