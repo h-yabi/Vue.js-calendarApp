@@ -13,6 +13,9 @@ export default new Vuex.Store({
     modalState: false,
     formState: false,
     todoState: false,
+    editable: false,
+    editIndex: null,
+    schedule: null
   },
   mutations: {
     addTodo(state, el) {
@@ -36,13 +39,17 @@ export default new Vuex.Store({
       state.filteringDateArray = state.dateArray.filter(function (date, index, self) {
         return self.indexOf(date) === index;
       });
-      // console.log(state.todoList);
+      state.modalState = false;
+      state.formState = false;
+      state.schedule = '';
     },
     showForm(state, data) {
       const judgeModalState = data.modalState === 'open' ? true : false;
       state.id = data.id;
+      state.editable = false;
       state.formState = true;
       state.modalState = judgeModalState;
+      state.schedule = '';
       setTimeout(function() {
         document.getElementById('inputTodo').focus();
       }, 10);
@@ -53,6 +60,18 @@ export default new Vuex.Store({
       state.todoState = true;
       state.modalState = judgeModalState;
     },
+    editTodo(state, data) {
+      state.editable = true;
+      state.todoState = false;
+      state.formState = true;
+      state.todoList.map(todo => {
+        if (todo.date == data.id) {
+          state.editIndex = data.index;
+          return state.schedule = todo.title[data.index];
+        }
+      });
+      console.log(state.editable)
+    },
     deleteTodo(state, data) {
       state.todoList.map(todo => {
         if (todo.date == data.id) {
@@ -62,7 +81,6 @@ export default new Vuex.Store({
       if (data.length.length === 0) {
         state.modalState = false;
       }
-      console.log(state.todoList);
     },
     modalState(state, boolean) {
       const judgeModalState = boolean === 'open' ? true : false;
@@ -90,6 +108,13 @@ export default new Vuex.Store({
         modalState
       }
       commit('showTodo', data);
+    },
+    editTodo({ commit }, { id, index }) {
+      const data = {
+        id,
+        index
+      }
+      commit('editTodo', data);
     },
     deleteTodo({ commit }, { id, index, length }) {
       const data = {

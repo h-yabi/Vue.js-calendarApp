@@ -4,7 +4,7 @@
       <div class="modal-wrap">
         <div class="modal">
           <div class="modal-date">{{ date }}</div>
-          <Form v-show="$store.state.formState" @modal-close="modalClose('close')" @add-todo="addTodo"></Form>
+          <Form v-show="$store.state.formState" @modal-close="modalClose('close')"></Form>
           <Todo v-show="$store.state.todoState" ref="todo"></Todo>
         </div>
         <div class="modalBg" @click="modalClose('close')"></div>
@@ -33,7 +33,7 @@ export default {
     modalClose(modalState) {
       this.modalState(modalState);
     },
-    ...mapActions(["addTodo", "modalState"]),
+    ...mapActions(["modalState"]),
   },
   computed: {
     date() {

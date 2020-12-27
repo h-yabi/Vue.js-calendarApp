@@ -5,8 +5,11 @@
         <template v-for="(title, index) in todo.title">
           <div class="todoItem" :key="index">
             {{title}}
-            <div class="todo-delete" @click="deleteItem(todo.date, index, todo.title)"><v-icon>fas fa-times-circle</v-icon></div>
+            <div class="todo-icon-wrap">
+              <div class="todo-edit" @click="editItem(todo.date, index)"><v-icon>fas fa-edit</v-icon></div>
+              <div class="todo-delete" @click="deleteItem(todo.date, index, todo.title)"><v-icon>fas fa-times-circle</v-icon></div>
             </div>
+          </div>
         </template>
       </div>
     </template>
@@ -24,11 +27,14 @@ export default {
     }
   },
   methods: {
+    editItem(id, index) {
+      this.editTodo({id, index})
+    },
     deleteItem(id, index, length) {
       this.deleteTodo({id, index, length});
     },
-    ...mapActions(['deleteTodo']),
-  }
+    ...mapActions(['editTodo', 'deleteTodo']),
+  },
 }
 </script>
 
@@ -46,9 +52,15 @@ export default {
   text-align: left;
   word-break: break-all;
 }
-.todo-delete {
+.todo-icon-wrap {
   display: flex;
   align-items: center;
+}
+.todo-edit {
+  margin-right: 7px;
+  .v-icon.v-icon {
+    font-size: 14px;
+  }
 }
 .v-icon.v-icon {
   font-size: 18px;
@@ -58,5 +70,8 @@ export default {
   .todoNum {
     display: none;
   }
+}
+.fa-times-circle:before {
+  color: black;
 }
 </style>

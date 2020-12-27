@@ -7,7 +7,7 @@
     >
       <v-text-field
         label="予定を入れる"
-        v-model="schedule"
+        v-model="data"
         id="inputTodo"
       ></v-text-field>
     </v-col>
@@ -20,20 +20,60 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 
 export default {
   name: 'Form',
   data() {
     return {
-      schedule: ''
+      schedule: '',
     }
   },
   methods: {
     emitTodoEvent(date) {
-      if(this.schedule === '') return;
-      this.$emit("add-todo", {date, title: this.schedule});
-      this.$emit("modal-close");
-      this.schedule = '';
+      // console.log(this.schedule)
+      // console.log(this.$store.state.schedule)
+
+      if(this.schedule === '' && this.$store.state.schedule !== '') {
+        this.schedule = this.$store.state.schedule;
+        return;
+      }
+      if(this.$store.state.editable) {
+        // alert('success!!')
+        this.$store.state.todoList.map(todo => {
+            // console.log(this.schedule)
+            // console.log(this.$store.state.editIndex)
+            // console.log(todo.title)
+          if (todo.date == date) {
+            return todo.title[this.$store.state.editIndex] = this.schedule;
+          }
+        });
+        console.log(this.$store.state.todoList)
+        this.$store.state.modalState = false;
+        this.$store.state.formState = false;
+        this.$store.state.editable = false;
+        this.schedule = '';
+      } else {
+        console.log(this.$store.state.schedule)
+        if(this.schedule  === '') return;
+        this.addTodo({date, title: this.schedule})
+        this.schedule = '';
+      }
+      // console.log(this.schedule)
+    },
+    ...mapActions(["addTodo"])
+  },
+  computed: {
+    data: {
+      get() {
+        console.log(this.$store.state.editable ? this.$store.state.schedule : this.schedule);
+        return this.$store.state.editable ? this.$store.state.schedule : this.schedule;
+      },
+      set(schedule) {
+        console.log(this.schedule)
+        console.log(schedule)
+        this.schedule = schedule;
+      },
     }
   }
 }
