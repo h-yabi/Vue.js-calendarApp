@@ -55,7 +55,6 @@ export default {
   watch: {
     getSchedule(value) {
       this.schedule = value;
-      document.getElementById('inputTodo').focus();
     }
   }
 }

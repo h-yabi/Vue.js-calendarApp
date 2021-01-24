@@ -29,6 +29,9 @@ export default {
   methods: {
     editItem(id, index) {
       this.editTodo({id, index})
+      setTimeout(function() {
+        document.getElementById('inputTodo').focus();
+      }, 10);
     },
     deleteItem(id, index, length) {
       this.deleteTodo({id, index, length});
