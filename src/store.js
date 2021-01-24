@@ -15,7 +15,7 @@ export default new Vuex.Store({
     todoState: false,
     editable: false,
     editIndex: null,
-    schedule: null
+    schedule: null // 編集ボタンを押したtodoのテキストが入る
   },
   mutations: {
     addTodo(state, el) {
@@ -61,6 +61,7 @@ export default new Vuex.Store({
       state.modalState = judgeModalState;
     },
     editTodo(state, data) {
+      // console.log(data)
       state.editable = true;
       state.todoState = false;
       state.formState = true;
@@ -70,7 +71,23 @@ export default new Vuex.Store({
           return state.schedule = todo.title[data.index];
         }
       });
-      console.log(state.editable)
+      // console.log(state.editable)
+      // console.log(state.schedule)
+    },
+    changeTodo(state, data) {
+      console.log(data.date)
+      if(state.editable) {
+        state.todoList.map(todo => {
+          if (todo.date == data.date) {
+            todo.title[state.editIndex] = data.schedule;
+            console.log(state.todoList)
+          }
+        });
+        state.modalState = false;
+        state.formState = false;
+        state.editable = false;
+        state.schedule = '';
+      }
     },
     deleteTodo(state, data) {
       state.todoList.map(todo => {
@@ -116,6 +133,13 @@ export default new Vuex.Store({
       }
       commit('editTodo', data);
     },
+    changeTodo({ commit }, { date, schedule }) {
+      const data = {
+        date,
+        schedule
+      }
+      commit('changeTodo', data)
+    },
     deleteTodo({ commit }, { id, index, length }) {
       const data = {
         id,
@@ -130,6 +154,6 @@ export default new Vuex.Store({
 
   },
   getters: {
-
+    getSchedule: state => state.schedule
   }
 })

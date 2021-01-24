@@ -7,7 +7,7 @@
     >
       <v-text-field
         label="予定を入れる"
-        v-model="data"
+        v-model="schedule"
         id="inputTodo"
       ></v-text-field>
     </v-col>
@@ -31,49 +31,30 @@ export default {
   },
   methods: {
     emitTodoEvent(date) {
-      // console.log(this.schedule)
-      // console.log(this.$store.state.schedule)
+      console.log(this.schedule)
+      console.log(this.$store.state.schedule)
 
-      if(this.schedule === '' && this.$store.state.schedule !== '') {
-        this.schedule = this.$store.state.schedule;
-        return;
-      }
       if(this.$store.state.editable) {
-        // alert('success!!')
-        this.$store.state.todoList.map(todo => {
-            // console.log(this.schedule)
-            // console.log(this.$store.state.editIndex)
-            // console.log(todo.title)
-          if (todo.date == date) {
-            return todo.title[this.$store.state.editIndex] = this.schedule;
-          }
-        });
-        console.log(this.$store.state.todoList)
-        this.$store.state.modalState = false;
-        this.$store.state.formState = false;
-        this.$store.state.editable = false;
-        this.schedule = '';
+        this.changeTodo({date, schedule: this.schedule});
       } else {
-        console.log(this.$store.state.schedule)
+        // console.log(this.$store.state.schedule)
         if(this.schedule  === '') return;
         this.addTodo({date, title: this.schedule})
+        // console.log({date, title: this.schedule})
         this.schedule = '';
       }
       // console.log(this.schedule)
     },
-    ...mapActions(["addTodo"])
+    ...mapActions(["addTodo", "changeTodo"])
   },
   computed: {
-    data: {
-      get() {
-        console.log(this.$store.state.editable ? this.$store.state.schedule : this.schedule);
-        return this.$store.state.editable ? this.$store.state.schedule : this.schedule;
-      },
-      set(schedule) {
-        console.log(this.schedule)
-        console.log(schedule)
-        this.schedule = schedule;
-      },
+    getSchedule() {
+      return this.$store.getters.getSchedule;
+    },
+  },
+  watch: {
+    getSchedule(value) {
+      this.schedule = value;
     }
   }
 }
