@@ -31,19 +31,16 @@ export default {
   },
   methods: {
     emitTodoEvent(date) {
-      console.log(this.schedule)
-      console.log(this.$store.state.schedule)
+      // console.log(this.schedule)
+      // console.log(this.$store.state.schedule)
 
       if(this.$store.state.editable) {
         this.changeTodo({date, schedule: this.schedule});
       } else {
-        // console.log(this.$store.state.schedule)
         if(this.schedule  === '') return;
         this.addTodo({date, title: this.schedule})
-        // console.log({date, title: this.schedule})
         this.schedule = '';
       }
-      // console.log(this.schedule)
     },
     ...mapActions(["addTodo", "changeTodo"])
   },

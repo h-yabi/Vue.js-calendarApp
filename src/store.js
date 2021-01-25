@@ -61,7 +61,6 @@ export default new Vuex.Store({
       state.modalState = judgeModalState;
     },
     editTodo(state, data) {
-      // console.log(data)
       state.editable = true;
       state.todoState = false;
       state.formState = true;
@@ -71,18 +70,24 @@ export default new Vuex.Store({
           return state.schedule = todo.title[data.index];
         }
       });
-      // console.log(state.editable)
-      // console.log(state.schedule)
     },
     changeTodo(state, data) {
-      console.log(data.date)
+      const that = this;
       if(state.editable) {
         state.todoList.map(todo => {
           if (todo.date == data.date) {
             todo.title[state.editIndex] = data.schedule;
-            console.log(state.todoList)
           }
         });
+
+        // この方法でスマートにかけたら良いのだが、、
+        // 参考サイト： https://jp.vuejs.org/v2/guide/reactivity.html
+        // state.todoList = Object.assign({}, state.todoList)
+
+        // 良い処理の方法ではない、$setを変更検出用に使用し、第二引数以降未指定（$set(state.todoList)）によって追加されたundefinedを無理やり削除している感じ。
+        that._vm.$set(state.todoList);
+        delete state.todoList.undefined
+
         state.modalState = false;
         state.formState = false;
         state.editable = false;
@@ -154,6 +159,7 @@ export default new Vuex.Store({
 
   },
   getters: {
-    getSchedule: state => state.schedule
+    getSchedule: state => state.schedule,
+    getTodoList: state => state.getTodoList
   }
 })
