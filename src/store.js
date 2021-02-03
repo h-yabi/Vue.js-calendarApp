@@ -102,6 +102,7 @@ export default new Vuex.Store({
       })
       if (data.length.length === 0) {
         state.modalState = false;
+        state.todoState = false;
       }
     },
     modalState(state, boolean) {
