@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   // プロジェクト全体で使うstateを入れる
   state: {
+    login_user: null,
     todoList: [],
     dateArray: [],
     filteringDateArray: [],
@@ -19,6 +20,12 @@ export default new Vuex.Store({
     schedule: null // 編集ボタンを押したtodoのテキストが入る
   },
   mutations: {
+    setLoginUser(state, user) {
+      state.login_user = user;
+    },
+    deleteLoginUser(state) {
+      state.login_user = null;
+    },
     addTodo(state, el) {
       if(state.todoList.length < 1) {
         state.todoList.push({
@@ -116,9 +123,18 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setLoginUser({ commit }, user) {
+      commit('setLoginUser', user);
+    },
+    deleteLoginUser({ commit }) {
+      commit('deleteLoginUser');
+    },
     login() {
       const google_auth_provier = new firebase.auth.GoogleAuthProvider();
       firebase.auth().signInWithRedirect(google_auth_provier);
+    },
+    logout() {
+      firebase.auth().signOut();
     },
     addTodo({ commit }, el) {
       commit('addTodo', el);
