@@ -42,16 +42,12 @@
 
       <Modal ref="modal"></Modal>
 
-
     </div>
   </v-app>
-
-
-
 </template>
 
 <script>
-import Modal from './Modal.vue'
+import Modal from '../components/Modal.vue'
 import moment from 'moment';
 import axios from 'axios';
 import { mapActions } from 'vuex';
@@ -156,7 +152,6 @@ export default {
 
 <style lang="scss" scoped>
 .calendar {
-  margin: 30px 15px 0;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
   color: #2c3e50;

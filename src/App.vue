@@ -7,23 +7,11 @@
           <img v-if="photoUrl" :src="photoUrl">
         </v-list-item-avatar>
         {{ userName }}
+        <v-btn v-if="$store.state.login_user" class="spacing-playground ma-4" color='primary' @click="logout">ログアウト</v-btn>
       </v-flex>
 
-      <v-layout row wrap>
-        <v-flex xs12>
-          <h1>TODO機能付きカレンダー</h1>
-          <p>ご利用の方は、Googleアカウントでログインしてください。</p>
-        </v-flex>
+      <router-view/>
 
-        <v-flex xs12 mt-5>
-          <v-btn color='info' @click="login">Googleアカウントでログイン</v-btn>
-        </v-flex>
-
-        <v-flex xs12 mt-5 v-if="$store.state.login_user">
-          <v-btn color='primary' @click="logout">ログアウト</v-btn>
-        </v-flex>
-
-      </v-layout>
     </v-container>
   </v-app>
 </template>
@@ -37,9 +25,10 @@ export default {
     firebase.auth().onAuthStateChanged(user => {
       if(user) {
         this.setLoginUser(user);
+        if(this.$router.currentRoute.name === 'home') this.$router.push({ name: 'calendar' })
       } else {
         this.deleteLoginUser();
-        this.logout();
+        this.$router.push({ name: 'home' }, () => {})
       }
     })
   },
@@ -54,6 +43,6 @@ export default {
 
 <style lang="scss" scoped>
 .userInfo {
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 }
 </style>
