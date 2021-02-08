@@ -129,6 +129,11 @@ export default new Vuex.Store({
     deleteLoginUser({ commit }) {
       commit('deleteLoginUser');
     },
+    fetchTodo({ getters, commit }) {
+      firebase.firestore().collection(`users/${getters.uid}/todo`).get().then(snapshot => {
+        snapshot.forEach(doc => commit('addTodo', doc.data()))
+      })
+    },
     login() {
       const google_auth_provier = new firebase.auth.GoogleAuthProvider();
       firebase.auth().signInWithRedirect(google_auth_provier);
@@ -136,7 +141,8 @@ export default new Vuex.Store({
     logout() {
       firebase.auth().signOut();
     },
-    addTodo({ commit }, el) {
+    addTodo({ getters, commit }, el) {
+      if(getters.uid) firebase.firestore().collection(`users/${getters.uid}/todo`).add(el)
       commit('addTodo', el);
     },
     showForm({ commit }, { id, modalState }) {
@@ -178,10 +184,10 @@ export default new Vuex.Store({
     modalState({ commit }, boolean) {
       commit('modalState', boolean);
     },
-
   },
   getters: {
     userName: state => state.login_user ? state.login_user.displayName : '',
     photoUrl: state => state.login_user ? state.login_user.photoURL : '',
+    uid: state => state.login_user ? state.login_user.uid : null,
   }
 })

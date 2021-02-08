@@ -25,6 +25,7 @@ export default {
     firebase.auth().onAuthStateChanged(user => {
       if(user) {
         this.setLoginUser(user);
+        this.fetchTodo();
         if(this.$router.currentRoute.name === 'home') this.$router.push({ name: 'calendar' })
       } else {
         this.deleteLoginUser();
@@ -33,7 +34,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions(['login', 'setLoginUser', 'logout', 'deleteLoginUser'])
+    ...mapActions(['login', 'setLoginUser', 'logout', 'deleteLoginUser', 'fetchTodo'])
   },
   computed: {
     ...mapGetters(['userName', 'photoUrl'])
