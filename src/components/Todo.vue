@@ -2,11 +2,11 @@
   <div class="todo">
     <template v-for="todo in $store.state.todoList">
       <div class="todoList" v-if="todo.date == $store.state.id" :key="todo.id">
-        <template v-for="(title, index) in todo.title">
-          <div class="todoItem" :key="index">
-            {{title}}
+        <template v-for="(titleArray, index) in todo.titleArray">
+          <div class="todoItem" :key="titleArray.todoId" :id="titleArray.todoId">
+            {{ titleArray.title }}
             <div class="todo-icon-wrap">
-              <div class="todo-edit" @click="editItem(todo.date, index)"><v-icon>fas fa-edit</v-icon></div>
+              <div class="todo-edit" @click="editItem(todo.date, titleArray.todoId, index)"><v-icon>fas fa-edit</v-icon></div>
               <div class="todo-delete" @click="deleteItem(todo.date, index, todo.title)"><v-icon>fas fa-times-circle</v-icon></div>
             </div>
           </div>
@@ -27,8 +27,8 @@ export default {
     }
   },
   methods: {
-    editItem(id, index) {
-      this.editTodo({id, index})
+    editItem(id, todoId, index) {
+      this.editTodo({id, todoId, index})
       setTimeout(function() {
         document.getElementById('inputTodo').focus();
       }, 10);

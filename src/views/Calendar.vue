@@ -27,14 +27,16 @@
           </div>
           <template v-for="todo in $store.state.todoList">
             <div class="todoList" v-if="todo.date == data.id" :key="todo.id">
-              <template v-for="(title, index) in todo.title">
-                <div class="todoItem" :key="index" @click="showTodoItem(data.id, 'open')">{{title}}</div>
+              <template v-for="(titleArray, index) in todo.titleArray">
+                <div class="todoItem" :key="index" @click="showTodoItem(data.id, 'open')">
+                  {{ titleArray.title }}
+                  </div>
               </template>
               <div
                 class="todoNum"
-                v-if="todo.title.length > 3"
+                v-if="todo.titleArray.length > 3"
                 @click="showTodoItem(data.id, 'open')"
-              >他{{todo.title.length - 3}}件</div>
+              >他{{todo.titleArray.length - 3}}件</div>
             </div>
           </template>
         </div>
