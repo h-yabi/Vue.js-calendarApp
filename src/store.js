@@ -186,6 +186,7 @@ export default new Vuex.Store({
     },
   },
   getters: {
+    getSchedule: state => state.schedule,
     userName: state => state.login_user ? state.login_user.displayName : '',
     photoUrl: state => state.login_user ? state.login_user.photoURL : '',
     uid: state => state.login_user ? state.login_user.uid : null,

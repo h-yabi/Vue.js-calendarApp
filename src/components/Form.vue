@@ -31,9 +31,6 @@ export default {
   },
   methods: {
     emitTodoEvent(date) {
-      // console.log(this.schedule)
-      // console.log(this.$store.state.schedule)
-
       if(this.$store.state.editable) {
         this.changeTodo({date, schedule: this.schedule});
       } else {
@@ -42,7 +39,7 @@ export default {
         this.schedule = '';
       }
     },
-    ...mapActions(["addTodo", "changeTodo"])
+    ...mapActions(["addTodo", "changeTodo"]),
   },
   computed: {
     getSchedule() {
