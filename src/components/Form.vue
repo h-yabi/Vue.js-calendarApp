@@ -1,5 +1,5 @@
 <template>
-  <v-form v-on:submit.prevent="emitTodoEvent($store.state.id)" name="form">
+  <v-form v-on:submit.prevent="submitTodo($store.state.id, $store.state.todoId)" name="form">
     <v-col
       cols="12"
       sm="6"
@@ -30,19 +30,16 @@ export default {
     }
   },
   methods: {
-    emitTodoEvent(date) {
-      // console.log(this.schedule)
-      // console.log(this.$store.state.schedule)
-
+    submitTodo(date, todoId) {
       if(this.$store.state.editable) {
-        this.changeTodo({date, schedule: this.schedule});
+        this.updateTodo({ date, todoId, schedule: this.schedule });
       } else {
         if(this.schedule  === '') return;
-        this.addTodo({date, title: this.schedule})
+        this.addTodo({date, title: this.schedule});
         this.schedule = '';
       }
     },
-    ...mapActions(["addTodo", "changeTodo"])
+    ...mapActions(['addTodo', 'updateTodo']),
   },
   computed: {
     getSchedule() {
