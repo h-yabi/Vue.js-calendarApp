@@ -217,6 +217,9 @@ export default {
     min-height: 120px;
     padding: 5px 10px 10px;
     font-size: 14px;
+    @media screen and (max-width: 767px) {
+      padding: 5px;
+    }
     &:nth-child(1) {
       .week {
         color: #990000;
@@ -230,6 +233,9 @@ export default {
   }
   .date {
     font-size: 14px;
+    @media screen and (max-width: 767px) {
+      font-size: 12px;
+    }
   }
 }
 div[data-week="0"] {
@@ -279,6 +285,9 @@ div[data-today] {
 .publicHoliday-text {
   color: #990000;
   font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s;
@@ -304,6 +313,7 @@ div[data-today] {
   list-style: none;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
   cursor: pointer;
   &:nth-child(n + 4) {
     display: none;
