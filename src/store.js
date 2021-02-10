@@ -114,13 +114,13 @@ export default new Vuex.Store({
         state.schedule = '';
       }
     },
-    deleteTodo(state, data) {
+    deleteTodo(state, { id, index, length }) {
       state.todoList.map(todo => {
-        if (todo.date == data.id) {
-          return todo.title.splice(data.index, 1)
+        if (todo.date == id) {
+          return todo.titleArray.splice(index, 1)
         }
       })
-      if (data.length.length === 0) {
+      if (length === 0) {
         state.modalState = false;
         state.todoState = false;
       }
@@ -183,13 +183,10 @@ export default new Vuex.Store({
         commit('updateTodo', { date, todoId, schedule });
       })
     },
-    deleteTodo({ commit }, { id, index, length }) {
-      const data = {
-        id,
-        index,
-        length
-      }
-      commit('deleteTodo', data);
+    deleteTodo({ getters, commit }, { id, todoId, index, length }) {
+      if (getters.uid) firebase.firestore().collection(`users/${getters.uid}/todo`).doc(todoId).delete().then(() => {
+        commit('deleteTodo', { id, index, length });
+      })
     },
     modalState({ commit }, boolean) {
       commit('modalState', boolean);

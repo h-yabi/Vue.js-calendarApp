@@ -7,7 +7,7 @@
             {{ titleArray.title }}
             <div class="todo-icon-wrap">
               <div class="todo-edit" @click="editItem(todo.date, titleArray.todoId, index)"><v-icon>fas fa-edit</v-icon></div>
-              <div class="todo-delete" @click="deleteItem(todo.date, index, todo.title)"><v-icon>fas fa-times-circle</v-icon></div>
+              <div class="todo-delete" @click="deleteItem(todo.date, titleArray.todoId, index, todo.titleArray)"><v-icon>fas fa-times-circle</v-icon></div>
             </div>
           </div>
         </template>
@@ -33,8 +33,9 @@ export default {
         document.getElementById('inputTodo').focus();
       }, 10);
     },
-    deleteItem(id, index, length) {
-      this.deleteTodo({id, index, length});
+    deleteItem(id, todoId, index, titleArray) {
+      let length = titleArray.length - 1;
+      this.deleteTodo({id, todoId, index, length});
     },
     ...mapActions(['editTodo', 'deleteTodo']),
   },
