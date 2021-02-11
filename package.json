@@ -13,6 +13,7 @@
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
     "firebase": "^8.2.6",
+    "firebase-tools": "^9.3.0",
     "moment": "^2.27.0",
     "router-link": "^0.0.4",
     "vue": "^2.6.11",
